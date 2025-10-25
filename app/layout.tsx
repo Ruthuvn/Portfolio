@@ -22,9 +22,9 @@ const helvetica = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Vipul Kumar • Developer",
+  title: "Ruthu Parinika • Developer",
   description:
-    "Vipul Kumar is a developer who creates beautiful and pixel perfect websites with zero effort in reviews.",
+    "Ruthu parinika is a developer who creates beautiful and pixel perfect websites with zero effort in reviews.",
 };
 
 export default function RootLayout({
@@ -55,7 +55,7 @@ export default function RootLayout({
       <body className={helvetica.className}>
         <StoreProvider>{children}</StoreProvider>
       </body>
-      <Script src="https://cdn.jsdelivr.net/gh/vipulkumar-dev/gsap@2024/ScrambleTextPlugin.min.js" />
+      
     </html>
   );
 }

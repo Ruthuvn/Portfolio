@@ -11,9 +11,9 @@ export function Intro({}) {
       "#intro > div.animation__container > svg",
     );
     if (ruthu) {
-      // console.log(vipul);
+      // console.log(ruthu);
 
-      // vipul.onmousemove = () => {
+      // ruthu.onmousemove = () => {
       //   console.log("move");
       // };
       ruthu.addEventListener("mousemove", () => {

@@ -21,6 +21,7 @@ export function HeroWrapper({}) {
           </span>
            <span className="animate__this animate__this3 left-0">
             Cloud Developer<span className="yellow__it">.</span>
+            <br />
           </span>
           <span className="animate__this animate__this4 left-0">
             Full-Stack Developer<span className="yellow__it">.</span>

@@ -162,66 +162,77 @@ const FullpageProvider = ({ children }: { children: React.ReactNode }) => {
   const getRotation = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
-
   useEffect(() => {
+    // create a consistent custom ease and a clear timeline that:
+    // 1) moves the current line up & hides it, 2) brings the next line in,
+    // 3) holds it briefly, then repeats for the next lines.
     const ease = CustomEase.create("custom", "M0,0 C0.52,0.01 0.16,1 1,1 ");
-        about.current = gsap
-              .timeline({ defaults: { ease: "none" }, repeat: -1 })
-    // Animate the left-side rotating titles. Previously only animate__this1 and
-    // animate__this2 were included in the timeline which left out the 3rd and
-    // 4th lines. Include all four so the full rotation is visible.
-    
-      .fromTo(
-        ".left .animate__this1",
-        { y: "0%", opacity: 1 },
-        { y: "-140%", opacity: 0, duration: 0.9, delay: 1.7, ease },
-      )
-      // 2 -> come in
+
+    // We'll use explicit durations and position offsets so the visible
+    // hold (the time a line stays visible) is controlled with "+=hold"
+    const showDuration = 0.9; // time for in/out animations
+    const hold = 1.7; // time a line remains visible before hiding
+
+    const tl = gsap.timeline({ defaults: { duration: showDuration, ease }, repeat: -1 });
+
+    // 1 -> hide
+    tl.fromTo(
+      ".left .animate__this1",
+      { y: "0%", opacity: 1 },
+      { y: "-140%", opacity: 0 },
+    )
+      // 2 -> come in (slightly overlap the previous hide for smooth motion)
       .fromTo(
         ".left .animate__this2",
         { y: "140%", opacity: 0 },
-        { y: "0%", opacity: 1, duration: 0.9, ease },
-        "-=0.9",
-      )
-      // 2 -> move up and hide
-      .fromTo(
-        ".left .animate__this2",
         { y: "0%", opacity: 1 },
-        { y: "-140%", opacity: 0, delay: 1.7, duration: 0.9, ease },
+        "-=0.1",
+      )
+      // hold 2 visible for `hold` seconds
+      .to({}, { duration: hold })
+      // 2 -> hide
+      .to(
+        ".left .animate__this2",
+        { y: "-140%", opacity: 0 },
       )
       // 3 -> come in
       .fromTo(
         ".left .animate__this3",
         { y: "140%", opacity: 0 },
-        { y: "0%", opacity: 1, duration: 0.9, ease },
-        "-=0.9",
-      )
-      // 3 -> move up and hide
-      .fromTo(
-        ".left .animate__this3",
         { y: "0%", opacity: 1 },
-        { y: "-140%", opacity: 0, delay: 1.7, duration: 0.9, ease },
+        "-=0.1",
+      )
+      // hold 3
+      .to({}, { duration: hold })
+      // 3 -> hide
+      .to(
+        ".left .animate__this3",
+        { y: "-140%", opacity: 0 },
       )
       // 4 -> come in
       .fromTo(
         ".left .animate__this4",
         { y: "140%", opacity: 0 },
-        { y: "0%", opacity: 1, duration: 0.9, ease },
-        "-=0.9",
-      )
-      // 4 -> move up and hide
-      .fromTo(
-        ".left .animate__this4",
         { y: "0%", opacity: 1 },
-        { y: "-140%", opacity: 0, delay: 1.7, duration: 0.9, ease },
+        "-=0.1",
       )
-      // loop back: bring 1 back in
+      // hold 4
+      .to({}, { duration: hold })
+      // 4 -> hide
+      .to(
+        ".left .animate__this4",
+        { y: "-140%", opacity: 0 },
+      )
+      // bring 1 back in to complete the loop
       .fromTo(
         ".left .animate__this1",
         { y: "140%", opacity: 0 },
-        { y: "0%", opacity: 1, duration: 0.9, ease },
-        "-=0.9",
+        { y: "0%", opacity: 1 },
+        "-=0.1",
       );
+
+    about.current = tl;
+
 
     const myText = new SplitType("#my-text", { types: "lines" });
     const myText2 = new SplitType("#my-text .line", {
